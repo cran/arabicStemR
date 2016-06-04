@@ -1,0 +1,5 @@
+export(stem, cleanChars, cleanLatinChars, doStemming, fixAlifs, removeArabicNumbers, 
+       removeDiacritics, removeEnglishNumbers, removeFarsiNumbers, removeNewlineChars, removeNumbers,
+       removePrefixes, removePunctuation, removeStopWords, removeSuffixes, reverse.transliterate,
+       transliterate)
+
