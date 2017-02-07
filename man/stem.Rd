@@ -8,7 +8,9 @@ Allows users to stem Arabic texts for text analysis.
 }
 \usage{
 stem(dat, cleanChars = TRUE, cleanLatinChars = TRUE, 
-    transliteration = TRUE, returnStemList = FALSE)
+    transliteration = TRUE, returnStemList = FALSE,
+	defaultStopwordList=TRUE, customStopwordList=NULL,
+	dontStemTheseWords = c("allh", "llh"))
 }
 
 \arguments{
@@ -26,6 +28,15 @@ Transliterates the text
 }
   \item{returnStemList}{
 Performs stemming by removing prefixes and suffixes
+}
+  \item{defaultStopwordList}{
+If TRUE, use the default stopword list of words to be removed.  If FALSE, do not use the default stopword list.  Default is TRUE.
+}
+  \item{customStopwordList}{
+Optional user-specified stopword list of words to be removed, supplied as a vector of strings in either Arabic UTF-8 or Latin characters following the stemmer's transliteration scheme (words without Arabic UTF-8 characters are processed with reverse.transliterate()). Default is NULL.
+}
+  \item{dontStemTheseWords}{
+Optional vector of strings that should not be stemmed.  These words can be supplied as transliterated Arabic (according to the transliteration scheme of transliterate() and reverse.transliterate()) or in unicode Arabic.  If a term matches an element of this argument at any intermediate point in stemming, that term will not be stemmed further.  The default is c("allh","llh") because in most applications, stemming these common words for "God" creates some confusion by resulting in the string "lh".
 }
 }
 \details{
@@ -47,6 +58,9 @@ data(aljazeera)
 
 ## stem and transliterate the results
 stem(aljazeera)
+
+## stem while not stemming certain words
+stem(aljazeera, dontStemTheseWords = c("aljzyr0"))
 
 ## stem and return the stemlist
 out <- stem(aljazeera,returnStemList=TRUE)

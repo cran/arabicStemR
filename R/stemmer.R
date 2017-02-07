@@ -1,6 +1,6 @@
 ## An arabic stemmer, modeled after after the light10 stemmer, but with substantial modifications
 ## Richard Nielsen
-## This version: 10/15/2015
+## This version: 7/25/2016
 
 ###########################################################
 ## A list of all chars in the Arabic unicode range
@@ -22,7 +22,9 @@ trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 ###########################################################
 ## package all the stemmer functions together
 stem <- function(dat, cleanChars=TRUE, cleanLatinChars=TRUE, 
-                 transliteration=TRUE, returnStemList=FALSE){
+                 transliteration=TRUE, returnStemList=FALSE,
+                 defaultStopwordList=TRUE, customStopwordList=NULL,
+                 dontStemTheseWords=c("allh","llh")){
   dat <- removeNewlineChars(dat)  ## gets rid of \n\r\t\f\v
   dat <- removePunctuation(dat)  ## gets rid of punctuation
   dat <- removeDiacritics(dat)  ## gets rid of Arabic diacritics
@@ -32,16 +34,24 @@ stem <- function(dat, cleanChars=TRUE, cleanLatinChars=TRUE,
   dat <- fixAlifs(dat)  ## standardizes different hamzas on alif seats
   if(cleanChars){dat <- cleanChars(dat)}  ## removes all unicode chars except Latin chars and Arabic alphabet
   if(cleanLatinChars){dat <- cleanLatinChars(dat)}  ## removes all Latin chars
-  dat <- removeStopWords(dat)$text  ## removes the stopwords
+  dat <- removeStopWords(dat, defaultStopwordList=TRUE, customStopwordList=customStopwordList)$text  ## removes the stopwords
+  ## transliterate the words that should not be stemmed
+  if(is.null(dontStemTheseWords) == F) {
+    hasArabic <- unlist(lapply(dontStemTheseWords, function(x) {
+                 length(grep("[\u0600-\u0700]", x)) > 0
+    }))
+    dontStemTheseWords[hasArabic == F] <- sapply(dontStemTheseWords[hasArabic == F], reverse.transliterate)
+  }
+  ## do the stemming
   if(returnStemList==TRUE){
-    tmp <- doStemming(dat) ## removes prefixes and suffixes, and can return a list matching words to stemmed words
+    tmp <- doStemming(dat, dontstem = dontStemTheseWords) ## removes prefixes and suffixes, and can return a list matching words to stemmed words
     dat <- tmp$text
     stemlist <- tmp$stemmedWords
     if(transliteration){dat <- transliterate(dat)}  ## performs transliteration
     return(list(text=dat,stemlist=stemlist))
   } else {
-    dat <- removePrefixes(dat)  ## removes prefixes
-    dat <- removeSuffixes(dat)  ## removes suffixes
+    dat <- removePrefixes(dat, dontstem = dontStemTheseWords)  ## removes prefixes
+    dat <- removeSuffixes(dat, dontstem = dontStemTheseWords)  ## removes suffixes
     if(transliteration){dat <- transliterate(dat)}  ## performs transliteration
     return(dat)
   }
@@ -165,7 +175,7 @@ cleanLatinChars <- function(texts){
 
 ## Removes stopwords from a list that I've put together
 
-removeStopWords <- function(texts){
+removeStopWords <- function(texts, defaultStopwordList=TRUE, customStopwordList=NULL){
   
   # Split up the words...
   textsSplit = strsplit(texts," ")[[1]]
@@ -465,6 +475,19 @@ removeStopWords <- function(texts){
   
   all <- c(preps,pronouns,particles,connectors)
   all <- unique(c(all,fixAlifs(all)))
+
+  ## if the defaultStopwordList = FALSE, then don't use any of the default stopwords
+  if(defaultStopwordList==F){all <- c()}
+  
+  ## add in the custom stopword list if provided
+  if(is.null(customStopwordList)==F){
+    ## first check if the custom list is in Arabic or Latin chars
+    hasArabic <- unlist(lapply(customStopwordList,function(x){length(grep("[\u0600-\u0700]",x))>0}))
+    ## transliterate those that don't have arabic
+    customStopwordList[hasArabic==F] <- sapply(customStopwordList[hasArabic==F],reverse.transliterate)
+    ## add the custom stopword list to "all"
+    all <- c(all, customStopwordList)
+  }
   
   if(length(textsSplit) > 0){
     for(i in 1:length(textsSplit)){
@@ -553,7 +576,7 @@ transliterate <- function(texts){
 reverse.transliterate <- function(texts){
   
   txts <- unlist(strsplit(texts, ""))
-  
+
   # The alphabet 
   txts <- sapply(txts, gsub, pattern='a', replacement='\u0627')
   txts <- sapply(txts, gsub, pattern='A', replacement='\u0649')

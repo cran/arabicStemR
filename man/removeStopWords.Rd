@@ -8,11 +8,17 @@ Remove Arabic stopwords.
 Defines a list of Arabic-language stopwords and removes them from a string.
 }
 \usage{
-removeStopWords(texts)
+removeStopWords(texts, defaultStopwordList=TRUE, customStopwordList=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{texts}{A string from which Arabic stopwords should be removed.}
+  \item{defaultStopwordList}{
+If TRUE, use the default stopword list of words to be removed.  If FALSE, do not use the default stopword list.  Default is TRUE.
+}
+  \item{customStopwordList}{
+Optional user-specified stopword list of words to be removed, supplied as a vector of strings in either Arabic UTF-8 or Latin characters following the stemmer's transliteration scheme (words without Arabic UTF-8 characters are processed with reverse.transliterate()). Default is NULL.
+}
 }
 \value{
 Returns a string with Arabic stopwords removed.
