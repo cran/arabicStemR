@@ -1,13 +1,13 @@
 Package: arabicStemR
 Type: Package
 Title: Arabic Stemmer for Text Analysis
-Version: 1.2
-Date: 2017-02-07
+Version: 1.3
+Date: 2022-07-14
 Author: Rich Nielsen
 Maintainer: Rich Nielsen <rnielsen@mit.edu>
 Description: Allows users to stem Arabic texts for text analysis.
 License: GPL (>= 2)
 NeedsCompilation: no
-Packaged: 2017-02-07 07:38:44 UTC; Richard Nielsen
+Packaged: 2022-07-16 13:13:46 UTC; rich
 Repository: CRAN
-Date/Publication: 2017-02-07 10:08:37
+Date/Publication: 2022-07-18 08:20:09 UTC

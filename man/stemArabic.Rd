@@ -1,13 +1,13 @@
-\name{stem}
-\alias{stem}
+\name{stemArabic}
+\alias{stemArabic}
 \title{
 Arabic Stemmer for Text Analysis
 }
 \description{
-Allows users to stem Arabic texts for text analysis. Now deprecated. Please use stemArabic.
+Allows users to stem Arabic texts for text analysis.
 }
 \usage{
-stem(dat, cleanChars = TRUE, cleanLatinChars = TRUE, 
+stemArabic(dat, cleanChars = TRUE, cleanLatinChars = TRUE, 
     transliteration = TRUE, returnStemList = FALSE,
 	defaultStopwordList=TRUE, customStopwordList=NULL,
 	dontStemTheseWords = c("allh", "llh"))
@@ -15,7 +15,7 @@ stem(dat, cleanChars = TRUE, cleanLatinChars = TRUE,
 
 \arguments{
   \item{dat}{
-The original data, as a vector of length one containing the text.
+The original data, as a vector of texts.
 }
   \item{cleanChars}{
 Removes all unicode characters except Latin characters and Arabic alphabet
@@ -40,11 +40,11 @@ Optional vector of strings that should not be stemmed.  These words can be suppl
 }
 }
 \details{
-\code{stem} prepares texts in Arabic for text analysis by stemming.
+\code{stemArabic} prepares texts in Arabic for text analysis by stemming.
 }
 
 \value{
-\code{stem} returns a named list with the following elements:
+\code{stemArabic} returns a named list with the following elements:
   \item{text}{The stemmed text}
   \item{stemlist}{A list of the stemmed words.}
 }
@@ -57,17 +57,17 @@ x <- "\u628\u633\u645 \u0627\u0644\u0644\u0647
      \u0627\u0644\u0631\u062D\u0645\u0646 
      \u0627\u0644\u0631\u062D\u064A\u0645"
 
+## inspect
+print(x)
+
 ## stem and transliterate
-## NOTE: the "stem()" function only accepts a vector of length 1. 
-## The function is deprecated in favor of stemArabic() which accepts vectors with multiple elements.
-stem(x)
+stemArabic(x)
 
 ## stem while not stemming certain words
 stem(x, dontStemTheseWords = c("alr7mn"))
 
 ## stem and return the stemlist
-out <- stem(x,returnStemList=TRUE)
+out <- stemArabic(x,returnStemList=TRUE)
 out$text
 out$stemlist
 }
-

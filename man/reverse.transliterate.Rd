@@ -22,16 +22,15 @@ reverse.transliterate(texts)
 Rich Nielsen
 }
 \examples{
-## Create latin string 
+## Create latin string following the arabicStemR package transliteration scheme.
 
-x <- 'hello'
+x <- 'al3rby'
 
-## Converts latin characters into Arabic unicode characters
+## Convert latin characters into Arabic unicode characters
 
 reverse.transliterate(x)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

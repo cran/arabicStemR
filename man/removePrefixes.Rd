@@ -14,13 +14,13 @@ dontstem = c('\u0627\u0644\u0644\u0647','u0644\u0644\u0647'))
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{texts}{An Arabic-language string in unicode}
-  \item{x1}{The number of letters that must remain in a word for the function to remove the prefix "waw".}
-  \item{x2}{The number of letters that must remain in a word for the function to remove the prefix "alif-lam".}
-  \item{x3}{The number of letters that must remain in a word for the function to remove the prefix "waw-alif-lam".}
-  \item{x4}{The number of letters that must remain in a word for the function to remove the prefix "ba-alif-lam".}
-  \item{x5}{The number of letters that must remain in a word for the function to remove the prefix "kaf-alif-lam".}
-  \item{x6}{The number of letters that must remain in a word for the function to remove the prefix "fa-alif-lam".}
-  \item{x7}{The number of letters that must remain in a word for the function to remove the prefix "lam-lam".}
+  \item{x1}{The number of letters that must be in a word for the function to remove the prefix "waw".}
+  \item{x2}{The number of letters that must be in a word for the function to remove the prefix "alif-lam".}
+  \item{x3}{The number of letters that must be in a word for the function to remove the prefix "waw-alif-lam".}
+  \item{x4}{The number of letters that must be in a word for the function to remove the prefix "ba-alif-lam".}
+  \item{x5}{The number of letters that must be in a word for the function to remove the prefix "kaf-alif-lam".}
+  \item{x6}{The number of letters that must be in a word for the function to remove the prefix "fa-alif-lam".}
+  \item{x7}{The number of letters that must be in a word for the function to remove the prefix "lam-lam".}
   \item{dontstem}{Words that should not be stemmed (entered in unicode).}
 }
 \value{
@@ -42,5 +42,4 @@ removePrefixes(x)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

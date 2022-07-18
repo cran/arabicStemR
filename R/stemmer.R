@@ -1,6 +1,6 @@
 ## An arabic stemmer, modeled after after the light10 stemmer, but with substantial modifications
 ## Richard Nielsen
-## This version: 7/25/2016
+## This version: 7/14/2022
 
 ###########################################################
 ## A list of all chars in the Arabic unicode range
@@ -21,10 +21,48 @@ trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
 ###########################################################
 ## package all the stemmer functions together
+stemArabic <- function(dat, cleanChars=TRUE, cleanLatinChars=TRUE, 
+                 transliteration=TRUE, returnStemList=FALSE,
+                 defaultStopwordList=TRUE, customStopwordList=NULL,
+                 dontStemTheseWords=c("allh","llh")){
+  dat <- removeNewlineChars(dat)  ## gets rid of \n\r\t\f\v
+  dat <- removePunctuation(dat)  ## gets rid of punctuation
+  dat <- removeDiacritics(dat)  ## gets rid of Arabic diacritics
+  dat <- removeEnglishNumbers(dat)  ## gets rid of English numbers
+  dat <- removeArabicNumbers(dat)  ## gets rid of Arabic numbers
+  dat <- removeFarsiNumbers(dat)  ## gets rid of Farsi numbers
+  dat <- fixAlifs(dat)  ## standardizes different hamzas on alif seats
+  if(cleanChars){dat <- cleanChars(dat)}  ## removes all unicode chars except Latin chars and Arabic alphabet
+  if(cleanLatinChars){dat <- cleanLatinChars(dat)}  ## removes all Latin chars
+  dat <- removeStopWords(dat, defaultStopwordList=TRUE, customStopwordList=customStopwordList)$text  ## removes the stopwords
+  ## transliterate the words that should not be stemmed
+  if(is.null(dontStemTheseWords) == F) {
+    hasArabic <- unlist(lapply(dontStemTheseWords, function(x) {
+      length(grep("[\u0600-\u0700]", x)) > 0
+    }))
+    dontStemTheseWords[hasArabic == F] <- sapply(dontStemTheseWords[hasArabic == F], reverse.transliterate)
+  }
+  ## do the stemming
+  if(returnStemList==TRUE){
+    tmp <- lapply(dat,function(x){doStemming(x, dontstem = dontStemTheseWords)}) ## removes prefixes and suffixes, and can return a list matching words to stemmed words
+    dat <- lapply(tmp,function(x){x$text})
+    stemlist <- lapply(tmp,function(x){x$stemmedWords})
+    if(transliteration){dat <- transliterate(dat)}  ## performs transliteration
+    return(list(text=dat,stemlist=stemlist))
+  } else {
+    dat <- unlist(lapply(dat,function(x){removePrefixes(x, dontstem = dontStemTheseWords)}))  ## removes prefixes
+    dat <- unlist(lapply(dat,function(x){removeSuffixes(x, dontstem = dontStemTheseWords)}))  ## removes suffixes
+    if(transliteration){dat <- transliterate(dat)}  ## performs transliteration
+    return(dat)
+  }
+}
+
+## The deprecated function
 stem <- function(dat, cleanChars=TRUE, cleanLatinChars=TRUE, 
                  transliteration=TRUE, returnStemList=FALSE,
                  defaultStopwordList=TRUE, customStopwordList=NULL,
                  dontStemTheseWords=c("allh","llh")){
+  #.Deprecated("stemArabic") ## wouldn't pass CRAN checks with this
   dat <- removeNewlineChars(dat)  ## gets rid of \n\r\t\f\v
   dat <- removePunctuation(dat)  ## gets rid of punctuation
   dat <- removeDiacritics(dat)  ## gets rid of Arabic diacritics
@@ -98,7 +136,7 @@ removePunctuation <- function(texts){
   texts <- gsub('\u060c|\u061b|\u061f|\u066c|\u066d|\u06d4|\u06dd|\u06de|\u06e9',' ',texts)
   ## replace other junk characters that sometimes show up
   texts <- gsub('[\u200C-\u200F]|&nbsp|~|\u2018|\u2022|\u2013|\u2026|\u201c|\u201d|\u2019|\ufd3e|\ufd3f', ' ', texts)
-  texts <- gsub('\xbb|\xab|\xf7|\xb7', ' ', texts)
+  #texts <- gsub('\xbb|\xab|\xf7|\xb7', ' ', texts) ## removed on 7/14/22 because CRAN checks threw this error: Flavor: r-devel-linux-x86_64-debian-gcc, r-devel-windows-x86_64, Check: examples, Result: ERROR, Running examples in 'arabicStemR-Ex.R' failed,   Warning in gsub("\xbb|\xab|\xf7|\xb7", " ", texts) : unable to translate '<bb>|<ab>|<f7>|<b7>' to a wide string, Error in gsub("\xbb|\xab|\xf7|\xb7", " ", texts) : 'pattern' is invalid, Calls: stemArabic -> removePunctuation -> gsub
   ## remove general punctuation
   texts <- gsub(pattern="[[:punct:]]", texts, replacement=" ")
   # remove extra spaces
@@ -178,7 +216,7 @@ cleanLatinChars <- function(texts){
 removeStopWords <- function(texts, defaultStopwordList=TRUE, customStopwordList=NULL){
   
   # Split up the words...
-  textsSplit = strsplit(texts," ")[[1]]
+  textsSplit = strsplit(texts," ")
   
   preps  <- c('\u0641\u064a',  #fy
               '\u0641\u064a\u0647',  #fyh
@@ -475,7 +513,7 @@ removeStopWords <- function(texts, defaultStopwordList=TRUE, customStopwordList=
   
   all <- c(preps,pronouns,particles,connectors)
   all <- unique(c(all,fixAlifs(all)))
-
+  
   ## if the defaultStopwordList = FALSE, then don't use any of the default stopwords
   if(defaultStopwordList==F){all <- c()}
   
@@ -489,14 +527,20 @@ removeStopWords <- function(texts, defaultStopwordList=TRUE, customStopwordList=
     all <- c(all, customStopwordList)
   }
   
-  if(length(textsSplit) > 0){
-    for(i in 1:length(textsSplit)){
-      if(textsSplit[i] %in% all){textsSplit[i] <- ""}
-    } 
+  
+  for(j in 1:length(textsSplit)){
+    ts <- textsSplit[[j]]
+    if(length(ts) > 0){
+      for(i in 1:length(ts)){
+        if(ts[i] %in% all){ts[i] <- ""}
+      } 
+    }
+    ts <- paste(ts, collapse=" ")
+    ts <- trim(gsub(" {2,}"," ", ts))
+    textsSplit[[j]] <- ts
   }
-  texts <- paste(textsSplit, collapse=" ")
-  texts <- trim(gsub(" {2,}"," ", texts))
-  return(list(text=texts,arabicStopwordList=all))
+  textsSplit <- unlist(textsSplit)
+  return(list(text=textsSplit,arabicStopwordList=all))
 }
 
 #######################################################

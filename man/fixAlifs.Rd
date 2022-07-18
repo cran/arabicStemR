@@ -25,7 +25,6 @@ Rich Nielsen
 
 \examples{
 ## Create string with Arabic characters 
-
 x <- '\u0622 \u0623 \u0675'
 
 ## Standardize Alifs
@@ -34,5 +33,4 @@ fixAlifs(x)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

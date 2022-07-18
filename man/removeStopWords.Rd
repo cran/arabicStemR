@@ -38,10 +38,8 @@ removeStopWords(x)$text
 
 ## Not run
 ## To see the full list of stop words 
-## removeStopWords(x)$arabicStopwordList
+removeStopWords(x)$arabicStopwordList
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

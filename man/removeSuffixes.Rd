@@ -15,16 +15,16 @@ dontstem = c('\u0627\u0644\u0644\u0647','u0644\u0644\u0647'))
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{texts}{An Arabic-language string in unicode.}
-  \item{x1}{The number of letters that must remain in a word for the function to remove the suffix "ha-alif".}
-  \item{x2}{The number of letters that must remain in a word for the function to remove the suffix "alif-nun".}
-  \item{x3}{The number of letters that must remain in a word for the function to remove the suffix "alif-ta".}
-  \item{x4}{The number of letters that must remain in a word for the function to remove the suffix "waw-nun".}
-  \item{x5}{The number of letters that must remain in a word for the function to remove the suffix "yah-nun".}
-  \item{x6}{The number of letters that must remain in a word for the function to remove the suffix "yah-heh".}
-  \item{x7}{The number of letters that must remain in a word for the function to remove the suffix "yah-ta marbutta".}
-  \item{x8}{The number of letters that must remain in a word for the function to remove the suffix "heh".}
-  \item{x9}{The number of letters that must remain in a word for the function to remove the suffix "ta marbutta".}
-  \item{x10}{The number of letters that must remain in a word for the function to remove the suffix "yah".}
+  \item{x1}{The number of letters that must be in a word for the function to remove the suffix "ha-alif".}
+  \item{x2}{The number of letters that must be in a word for the function to remove the suffix "alif-nun".}
+  \item{x3}{The number of letters that must be in a word for the function to remove the suffix "alif-ta".}
+  \item{x4}{The number of letters that must be in a word for the function to remove the suffix "waw-nun".}
+  \item{x5}{The number of letters that must be in a word for the function to remove the suffix "yah-nun".}
+  \item{x6}{The number of letters that must be in a word for the function to remove the suffix "yah-heh".}
+  \item{x7}{The number of letters that must be in a word for the function to remove the suffix "yah-ta marbutta".}
+  \item{x8}{The number of letters that must be in a word for the function to remove the suffix "heh".}
+  \item{x9}{The number of letters that must be in a word for the function to remove the suffix "ta marbutta".}
+  \item{x10}{The number of letters that must be in a word for the function to remove the suffix "yah".}
   \item{dontstem}{Words that should not be stemmed (entered in unicode).}
 }
 
@@ -47,5 +47,3 @@ removeSuffixes(x)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

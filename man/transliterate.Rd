@@ -27,12 +27,9 @@ Rich Nielsen
 
 x <- '\u0627\u0647\u0644\u0627 \u0648\u0633\u0647\u0644\u0627'
 
-## Performs transliteration of Arabic into latin characters
-
+## Performs transliteration of Arabic into latin characters.
 transliterate(x)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

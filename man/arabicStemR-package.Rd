@@ -6,27 +6,31 @@
 A package for stemming Arabic for text analysis.
 }
 \description{
-This package is a stemmer for texts in Arabic, as part of the txtorg utility for text analysis workflow.  The stemmer is loosely based on the light 10 stemmer, but with a number of modifications.
+This package is a stemmer for texts in Arabic (Modern Standard).  The stemmer is loosely based on the light 10 stemmer, but with a number of modifications.
 }
 \details{ 
-Use the \code{stem} function.
+Use the \code{stemArabic} function.
 }
 \author{
 Maintainer: Rich Nielsen <rnielsen@mit.edu>
 }
 
 \keyword{ package }
-\seealso{ \code{\link{stem}}}
+\seealso{ \code{\link{stemArabic}}}
 \examples{
-# Load data
+## generate some text in Arabic
+x <- "\u628\u633\u645 \u0627\u0644\u0644\u0647
+     \u0627\u0644\u0631\u062D\u0645\u0646 
+     \u0627\u0644\u0631\u062D\u064A\u0645"
 
-data(aljazeera)
+## stem and transliterate
+stemArabic(x)
 
-## stem and transliterate the results
-stem(aljazeera)
+## stem while not stemming certain words
+stem(x, dontStemTheseWords = c("alr7mn"))
 
 ## stem and return the stemlist
-out <- stem(aljazeera,returnStemList=TRUE)
+out <- stemArabic(x,returnStemList=TRUE)
 out$text
 out$stemlist
 }
